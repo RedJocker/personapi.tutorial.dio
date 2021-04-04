@@ -9,6 +9,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class PersonapiApplication {
 
 	public static void main(String[] args) {
-		final ConfigurableApplicationContext context = SpringApplication.run(PersonapiApplication.class, args);
+		SpringApplication.run(PersonapiApplication.class, args);
 	}
 }
