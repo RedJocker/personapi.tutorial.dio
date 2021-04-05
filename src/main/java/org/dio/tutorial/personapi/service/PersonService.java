@@ -23,7 +23,6 @@ public class PersonService {
     public MessageResponseDTO createPerson(PersonDTO personDTO){
 
         final Person personToSave = personMapper.toModel(personDTO);
-        System.out.println(personToSave);
         final Person savedPerson = personRepository.save(personToSave);
 
         return MessageResponseDTO.of("Created personDTO with ID " + savedPerson.getId());

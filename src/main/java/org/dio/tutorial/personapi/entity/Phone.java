@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
-
 import org.dio.tutorial.personapi.enums.PhoneType;
 
 import javax.persistence.Column;
