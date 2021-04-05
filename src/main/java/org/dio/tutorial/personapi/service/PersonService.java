@@ -8,7 +8,6 @@ import org.dio.tutorial.personapi.exception.PersonNotFoundException;
 import org.dio.tutorial.personapi.mapper.PersonMapper;
 import org.dio.tutorial.personapi.repository.PersonRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,15 +20,13 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonMapper personMapper = PersonMapper.INSTANCE;
 
-    public MessageResponseDTO createPerson(@RequestBody PersonDTO personDTO){
+    public MessageResponseDTO createPerson(PersonDTO personDTO){
 
         final Person personToSave = personMapper.toModel(personDTO);
+        System.out.println(personToSave);
         final Person savedPerson = personRepository.save(personToSave);
 
-        return MessageResponseDTO
-                .builder()
-                .message("Created personDTO with ID " + savedPerson.getId())
-                .build();
+        return MessageResponseDTO.of("Created personDTO with ID " + savedPerson.getId());
     }
 
     public List<PersonDTO> listAll() {
@@ -52,5 +49,17 @@ public class PersonService {
                 .findFirst()
                 .orElseThrow(() -> new PersonNotFoundException(id));
 
+    }
+
+    public MessageResponseDTO updateById(Long id, PersonDTO personDTO) { // !! a atual implementação não está reutilizando ids dos telefones no update, ao menos que os mesmos sejam referenciados corretamente no json da request, gerando assim números duplicados na tabela de telefone que não são referenciados por pessoa nenhuma.
+        personDTO.setId(id);
+        final Person personToUpdate = personMapper.toModel(personDTO);
+
+        return personRepository.findById(id)
+                .stream()
+                .map(found -> personRepository.save(personToUpdate))
+                .map(person -> MessageResponseDTO.of("Updated personDTO with ID " + person.getId()))
+                .findFirst()
+                .orElseThrow(() -> new PersonNotFoundException(id));
     }
 }
