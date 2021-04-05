@@ -35,6 +35,6 @@ public class Phone {
     @Column(nullable = false, length = 15)
     private PhoneType type;
 
-    @Column(nullable = false, length = 25)
+    @Column(nullable = false, length = 14)
     private String number;
 }
