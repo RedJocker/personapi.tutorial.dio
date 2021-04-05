@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.dio.tutorial.personapi.entity.Phone;
-import org.hibernate.validator.constraints.br.CPF;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import org.hibernate.validator.constraints.br.CPF;
+
 import java.util.List;
 
 @Data
@@ -40,5 +38,5 @@ public class PersonDTO {
 
     @NotEmpty
     @Valid
-    private List<Phone> phones;
+    private List<PhoneDTO> phones;
 }
