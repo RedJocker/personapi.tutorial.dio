@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.dio.tutorial.personapi.dto.request.PersonDTO;
 import org.dio.tutorial.personapi.dto.response.MessageResponseDTO;
 import org.dio.tutorial.personapi.entity.Person;
+import org.dio.tutorial.personapi.exception.PersonNotFoundException;
 import org.dio.tutorial.personapi.mapper.PersonMapper;
 import org.dio.tutorial.personapi.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,11 @@ public class PersonService {
                 .stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public PersonDTO findById(Long id) {
+        return personRepository.findById(id)
+                .map(personMapper::toDTO)
+                .orElseThrow(() -> new PersonNotFoundException(id));
     }
 }
