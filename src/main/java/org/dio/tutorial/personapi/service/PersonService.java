@@ -44,4 +44,13 @@ public class PersonService {
                 .map(personMapper::toDTO)
                 .orElseThrow(() -> new PersonNotFoundException(id));
     }
+
+    public void deleteById(Long id) {
+        personRepository.findById(id)
+                .stream()
+                .peek(personRepository::delete)
+                .findFirst()
+                .orElseThrow(() -> new PersonNotFoundException(id));
+
+    }
 }
