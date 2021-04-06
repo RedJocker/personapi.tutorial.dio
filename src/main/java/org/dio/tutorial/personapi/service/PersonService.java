@@ -7,7 +7,6 @@ import org.dio.tutorial.personapi.entity.Person;
 import org.dio.tutorial.personapi.exception.PersonNotFoundException;
 import org.dio.tutorial.personapi.mapper.PersonMapper;
 import org.dio.tutorial.personapi.repository.PersonRepository;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class PersonService {
         final Person savedPerson = personRepository.save(personToSave);
 
 
-        return MessageResponseDTO.of("Created personDTO with ID " );
+        return MessageResponseDTO.of("Created personDTO with ID " + savedPerson.getId());
     }
 
     public List<PersonDTO> listAll() {

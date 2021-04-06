@@ -118,8 +118,8 @@ public class PersonServiceTest {
         }
 
         @Test
-        @DisplayName("findById() when not found id return PersonNotFoundException")
-        void testFindByIdWhenNotFoundReturnPersonNotFoundException() {
+        @DisplayName("findById() when not found id throw PersonNotFoundException")
+        void testFindByIdWhenNotFoundThrowPersonNotFoundException() {
 
             Mockito.when(personRepository.findById(1L))
                     .thenReturn(Optional.empty());
@@ -127,7 +127,87 @@ public class PersonServiceTest {
             Assertions.assertThrows(PersonNotFoundException.class, () -> personService.findById(1L));
 
             try {
-                personRepository.findById(1L);
+                personService.findById(1L);
+            } catch (PersonNotFoundException e) {
+                final String expectedMessage = "Person not found with id " + 1L;
+                Assertions.assertEquals(expectedMessage, e.getMessage());
+            }
+        }
+    }
+
+
+    @Nested
+    class DeleteByIdTest {
+
+        @Test
+        @DisplayName("deleteById() when found id return personDTO with id")
+        void testDeleteByIdWhenFoundDoNothing() {
+            final Person fakeEntity = PersonUtils.createFakeEntity();
+
+            Mockito.when(personRepository.findById(fakeEntity.getId()))
+                    .thenReturn(Optional.of(fakeEntity));
+//            Mockito.doNothing().when(personRepository).delete(fakeEntity);
+
+            personService.deleteById(fakeEntity.getId());
+
+            Mockito.verify(personRepository, Mockito.times(1)).findById(fakeEntity.getId());
+            Mockito.verify(personRepository, Mockito.times(1)).delete(fakeEntity);
+
+        }
+
+        @Test
+        @DisplayName("deleteById() when not found id throw PersonNotFoundException")
+        void testDeleteByIdWhenNotFoundThrowPersonNotFoundException() {
+
+            Mockito.when(personRepository.findById(1L))
+                    .thenReturn(Optional.empty());
+
+            Assertions.assertThrows(PersonNotFoundException.class, () -> personService.findById(1L));
+
+            try {
+                personService.deleteById(1L);
+            } catch (PersonNotFoundException e) {
+                final String expectedMessage = "Person not found with id " + 1L;
+                Assertions.assertEquals(expectedMessage, e.getMessage());
+            }
+        }
+    }
+
+
+    @Nested
+    class UpdateByIdTest {
+
+        @Test
+        @DisplayName("updateById() when found id return updated message")
+        void testUpdateByIdWhenFoundReturnPersonDto() {
+            final Person fakeEntity = PersonUtils.createFakeEntity();
+            final Person updatedFakeEntity = PersonUtils.createFakeEntity();
+            updatedFakeEntity.setLastName("updated");
+            final PersonDTO updatedDTO = mapper.toDTO(updatedFakeEntity);
+
+            Mockito.when(personRepository.findById(fakeEntity.getId()))
+                    .thenReturn(Optional.of(fakeEntity));
+            Mockito.when(personRepository.save(updatedFakeEntity))
+                    .thenReturn(updatedFakeEntity);
+
+            final MessageResponseDTO expected = MessageResponseDTO.of("Updated personDTO with ID 1");
+            final MessageResponseDTO result = personService.updateById(updatedDTO.getId(), updatedDTO);
+
+            Assertions.assertEquals(expected, result);
+        }
+
+        @Test
+        @DisplayName("updateById() when not found id throw PersonNotFoundException")
+        void testUpdateByIdWhenNotFoundReturnThrowNotFoundException() {
+            final PersonDTO fakeDTO = PersonUtils.createFakeDTO();
+
+            Mockito.when(personRepository.findById(1L))
+                    .thenReturn(Optional.empty());
+
+            Assertions.assertThrows(PersonNotFoundException.class, () -> personService.updateById(1L, fakeDTO));
+
+            try {
+                personService.updateById(1L, fakeDTO);
             } catch (PersonNotFoundException e) {
                 final String expectedMessage = "Person not found with id " + 1L;
                 Assertions.assertEquals(expectedMessage, e.getMessage());
