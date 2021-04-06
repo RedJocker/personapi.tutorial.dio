@@ -5,6 +5,7 @@ import org.dio.tutorial.personapi.entity.Person;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 
 public class PersonUtils {
 
@@ -13,6 +14,17 @@ public class PersonUtils {
     private static final String CPF_NUMBER = "369.333.878-79";
     private static final long PERSON_ID = 1L;
     public static final LocalDate BIRTH_DATE = LocalDate.of(2010, 10, 1);
+
+    private static final List<Person> fakeRepository = List.of(
+            createFakeEntity(),
+            Person.builder().id(2L).firstName("Joao").lastName("das Couves").cpf("755.355.938-50")
+                    .birthDate(LocalDate.ofYearDay(1999, 99)).phones(List.of(PhoneUtils.createFakeEntity()))
+                    .build(),
+            Person.builder().id(3L).firstName("Jose").lastName("Carneiro").cpf("488.446.195-98")
+                    .birthDate(LocalDate.ofYearDay(1988, 88)).phones(List.of(PhoneUtils.createFakeEntity()))
+                    .build()
+    );
+
 
     public static PersonDTO createFakeDTO() {
         return PersonDTO.builder()
@@ -33,5 +45,9 @@ public class PersonUtils {
                 .birthDate(BIRTH_DATE)
                 .phones(Collections.singletonList(PhoneUtils.createFakeEntity()))
                 .build();
+    }
+
+    public static List<Person> getFakeRepository(){
+        return fakeRepository;
     }
 }
